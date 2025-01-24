@@ -7,6 +7,7 @@ from utils import rescale_bboxes, plot_results, transform
 
 def detect(im, model, transform):
     # mean-std normalize the input image (batch-size: 1)
+    # (1, 3, resized_height, resized_width)
     img = transform(im).unsqueeze(0)
 
     # demo model only support by default images with aspect ratio between 0.5 and 2
@@ -18,10 +19,12 @@ def detect(im, model, transform):
     outputs = model(img)
 
     # keep only predictions with 0.7+ confidence
+    # outputs['pred_logits']: (batch_size, num_queries, num_classes + 1)
     probas = outputs['pred_logits'].softmax(-1)[0, :, :-1]
     keep = probas.max(-1).values > 0.7
 
     # convert boxes from [0; 1] to image scales
+    # outputs['pred_boxes']: [batch_size, num_queries, 4]
     bboxes_scaled = rescale_bboxes(outputs['pred_boxes'][0, keep], im.size)
     return probas[keep], bboxes_scaled
 
