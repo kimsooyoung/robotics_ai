@@ -1,13 +1,8 @@
 # Referenced from https://colab.research.google.com/github/facebookresearch/detr/blob/colab/notebooks/detr_demo.ipynb#scrollTo=cfCcEYjg7y46
 
 import torch
-import requests
-import matplotlib.pyplot as plt
-import torchvision.transforms as T
-
 from torch import nn
 from torchvision.models import resnet50
-from PIL import Image
 
 torch.set_grad_enabled(False)
 
@@ -85,7 +80,7 @@ class DETRdemo(nn.Module):
             # (H 128) > (H 1 128) > (H W 128)
             self.row_embed[:H].unsqueeze(1).repeat(1, W, 1),
             # (H W 256) > (HW 256) > (HW 1 256)
-        ], dim=-1).flatten(0, 1).unsqeeze(1)
+        ], dim=-1).flatten(0, 1).unsqueeze(1)
 
         # Pass through Transformer
         # (256 H W) > (1 256 HW) > (HW 1 256)
@@ -102,3 +97,20 @@ class DETRdemo(nn.Module):
         pred_boxes = self.linear_box(tf_output).sigmoid()
 
         return {'pred_logits': pred_logits, 'pred_boxes': pred_boxes}
+
+if __name__ == "__main__":
+    detr = DETRdemo(num_classes=91)
+
+    # Load the state dict
+    state_dict = torch.hub.load_state_dict_from_url(
+        url='https://dl.fbaipublicfiles.com/detr/detr_demo-da2a99e9.pth',
+        map_location='cpu', check_hash=True
+    )
+
+    # Rename keys in the state_dict to match the model
+    state_dict["linear_box.weight"] = state_dict.pop("linear_bbox.weight")
+    state_dict["linear_box.bias"] = state_dict.pop("linear_bbox.bias")
+
+    # Load the updated state_dict
+    detr.load_state_dict(state_dict)
+    detr.eval()
