@@ -1,0 +1,26 @@
+{
+    "action_repeat": 1,
+    "action_scale": 0.6,
+    "ctrl_dt": 0.05,
+    "early_termination": true,
+    "episode_length": 500,
+    "history_len": 1,
+    "noise_config": {
+        "level": 1.0,
+        "scales": {
+            "joint_pos": 0.05
+        }
+    },
+    "reward_config": {
+        "scales": {
+            "action_rate": 0.0,
+            "angvel": 1.0,
+            "energy": 0.0,
+            "linvel": 0.0,
+            "pose": 0.0,
+            "termination": -100.0,
+            "torques": 0.0
+        }
+    },
+    "sim_dt": 0.01
+}
