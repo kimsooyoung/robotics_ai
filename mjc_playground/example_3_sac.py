@@ -41,7 +41,7 @@ from orbax import checkpoint as ocp
 from mujoco_playground import registry
 
 
-env_name = "FishSwim"  # @param ["AcrobotSwingup", "AcrobotSwingupSparse", "BallInCup", "CartpoleBalance", "CartpoleBalanceSparse", "CartpoleSwingup", "CartpoleSwingupSparse", "CheetahRun", "FingerSpin", "FingerTurnEasy", "FingerTurnHard", "FishSwim", "HopperHop", "HopperStand", "HumanoidStand", "HumanoidWalk", "HumanoidRun", "PendulumSwingup", "PointMass", "ReacherEasy", "ReacherHard", "SwimmerSwimmer6", "WalkerRun", "WalkerStand", "WalkerWalk"]
+env_name = "HumanoidWalk"  # @param ["AcrobotSwingup", "AcrobotSwingupSparse", "BallInCup", "CartpoleBalance", "CartpoleBalanceSparse", "CartpoleSwingup", "CartpoleSwingupSparse", "CheetahRun", "FingerSpin", "FingerTurnEasy", "FingerTurnHard", "FishSwim", "HopperHop", "HopperStand", "HumanoidStand", "HumanoidWalk", "HumanoidRun", "PendulumSwingup", "PointMass", "ReacherEasy", "ReacherHard", "SwimmerSwimmer6", "WalkerRun", "WalkerStand", "WalkerWalk"]
 CAMERAS = {
     "AcrobotSwingup": "fixed",
     "AcrobotSwingupSparse": "fixed",
@@ -85,21 +85,21 @@ x_data, y_data, y_dataerr = [], [], []
 times = [datetime.now()]
 
 def progress(num_steps, metrics):
-  clear_output(wait=True)
+    clear_output(wait=True)
 
-  times.append(datetime.now())
-  x_data.append(num_steps)
-  y_data.append(metrics["eval/episode_reward"])
-  y_dataerr.append(metrics["eval/episode_reward_std"])
+    times.append(datetime.now())
+    x_data.append(num_steps)
+    y_data.append(metrics["eval/episode_reward"])
+    y_dataerr.append(metrics["eval/episode_reward_std"])
 
-  plt.xlim([0, sac_params["num_timesteps"] * 1.25])
-  plt.ylim([0, 1100])
-  plt.xlabel("# environment steps")
-  plt.ylabel("reward per episode")
-  plt.title(f"y={y_data[-1]:.3f}")
-  plt.errorbar(x_data, y_data, yerr=y_dataerr, color="blue")
+    plt.xlim([0, sac_params["num_timesteps"] * 1.25])
+    plt.ylim([0, 1100])
+    plt.xlabel("# environment steps")
+    plt.ylabel("reward per episode")
+    plt.title(f"y={y_data[-1]:.3f}")
+    plt.errorbar(x_data, y_data, yerr=y_dataerr, color="blue")
 
-  display(plt.gcf())
+    plt.gcf().savefig("sac_training.png")
 
 sac_training_params = dict(sac_params)
 network_factory = sac_networks.make_sac_networks
