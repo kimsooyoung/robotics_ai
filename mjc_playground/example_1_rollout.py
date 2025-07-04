@@ -1,8 +1,9 @@
 
-import itertools
 import time
-from typing import Callable, List, NamedTuple, Optional, Union
+import imageio
+import itertools
 import numpy as np
+from typing import Callable, List, NamedTuple, Optional, Union
 
 import mediapy as media
 import matplotlib.pyplot as plt
@@ -70,7 +71,7 @@ for i in range(env_cfg.episode_length):
 frames = env.render(rollout)
 
 # Save video using imageio
-# video_path = "rollout_video.mp4"
-# imageio.mimsave(video_path, frames, fps=int(1.0 / env.dt))
+video_path = "rollout_video.mp4"
+imageio.mimsave(video_path, frames, fps=int(1.0 / env.dt))
 
-# print(f"Video saved to {video_path}")
+print(f"Video saved to {video_path}")
